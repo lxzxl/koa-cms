@@ -3,8 +3,13 @@
  */
 'use strict';
 const fs = require('fs');
-const userRoutes = require('./users');
 
-module.exports = function (app) {
-    userRoutes.forEach(r => app.use(r));
+module.exports = function(app) {
+    console.log(module.filename);
+    for (let filename of fs.readdirSync(__dirname)) {
+        if (/^index.js$/.test(filename)) continue;
+        let routes = require('./' + filename);
+        routes.forEach(r => app.use(r));
+        console.log('Route Loaded: ' + filename);
+    }
 };

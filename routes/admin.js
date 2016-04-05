@@ -7,10 +7,7 @@ const route = require('koa-route');
 const users = require('../controllers/users');
 
 const routes = [
-    route.get('/users', users.list),
-    route.get('/users/:id', users.fetch),
-    route.get('/users/', users.home),
-    route.post('/users', users.create)
+    route.get('/admin/users', users.home)
 ];
 
 module.exports = routes;

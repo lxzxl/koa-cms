@@ -1,15 +1,14 @@
 {% extends 'layout.html' %}
-
-{% block title %}Messages{% endblock %}
+{% block title %}Users{% endblock %}
 
 {% block content %}
-<ul class="messages">
-    {% for message in messages %}
-    <li class="message">{{ message.message }}</li>
+<ul class="users">
+    {% for user in users %}
+    <li class="user">{{ user.name }}</li>
     {% endfor %}
 </ul>
-<form action="/messages" method="post" id="message-form">
-    <textarea placeholder="Insert a message" name="message"
-              onkeydown="if (event.keyCode == 13) document.getElementById('message-form').submit();"></textarea>
+<form action="/users" method="post" id="user-form">
+    <input placeholder="Add a user" name="name"
+           onkeydown="if (event.keyCode == 13) document.getElementById('user-form').submit();"/>
 </form>
 {% endblock %}
