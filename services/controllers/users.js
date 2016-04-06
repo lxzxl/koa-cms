@@ -28,7 +28,7 @@ module.exports.fetch = function *fetch() {
 module.exports.create = function *create() {
     let data = yield parse(this);
     let user = new User(data);
-    user.save();
+    yield user.save();
     this.redirect('back');
 };
 
