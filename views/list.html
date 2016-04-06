@@ -7,7 +7,7 @@
     <li class="user">{{ user.name }}</li>
     {% endfor %}
 </ul>
-<form action="/users" method="post" id="user-form">
+<form action="/services/users" method="post" id="user-form">
     <input placeholder="Add a user" name="name"
            onkeydown="if (event.keyCode == 13) document.getElementById('user-form').submit();"/>
 </form>

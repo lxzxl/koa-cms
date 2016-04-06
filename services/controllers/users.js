@@ -1,18 +1,21 @@
 'use strict';
 const parse = require('co-body');
-const users = [
-    {
-        id: 0,
-        name: 'Steven Li'
-    },
-    {
-        id: 1,
-        name: 'Steve Jobs'
+const User = require('../models/users');
+const Group = require('../models/groups');
+
+User.findOne({name: 'test'}, function (err, testUser) {
+    if (!testUser) {
+        console.log('test user did not exist; creating test user...');
+        testUser = new User({
+            id: 1,
+            name: 'test'
+        });
+        testUser.save();
     }
-];
+});
 
 module.exports.list = function *list() {
-    this.body = yield users;
+    this.body = yield User.find();
 };
 
 module.exports.fetch = function *fetch() {
@@ -24,9 +27,9 @@ module.exports.fetch = function *fetch() {
 };
 
 module.exports.create = function *create() {
-    const user = yield parse(this);
-    const id = users.push(user) - 1;
-    user.id = id;
+    let data = yield parse(this);
+    let user = new User(data);
+    user.save();
     this.redirect('back');
 };
 
