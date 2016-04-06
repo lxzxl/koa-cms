@@ -1,14 +1,17 @@
 'use strict';
 
+const path = require('path');
+
 const compress = require('koa-compress');
 const logger = require('koa-logger');
 const serve = require('koa-static');
 const koa = require('koa');
-const path = require('path');
+const mount = require('koa-mount');
+
+const service = require('./services');
+const viewRouter = require('./routes');
+
 const app = module.exports = koa();
-
-const routes = require('./routes');
-
 
 // Logger
 app.use(logger());
@@ -20,7 +23,8 @@ app.use(serve(path.join(__dirname, 'public')));
 app.use(compress());
 
 // load routes
-routes(app);
+app.use(mount(viewRouter.middleware()));
+app.use(mount('/services', service.router.middleware()));
 
 if (!module.parent) {
     app.listen(3000);

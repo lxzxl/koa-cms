@@ -5,7 +5,7 @@
 const fs = require('fs');
 const Router = require('koa-router');
 
-const viewRouter = new Router();
+const serviceRouter = new Router();
 (function retrieveRoutes(baseRouter, dir) {
     for (let filename of fs.readdirSync(dir)) {
         let filePath = `${dir}/${filename}`;
@@ -18,6 +18,6 @@ const viewRouter = new Router();
             retrieveRoutes(baseRouter, filePath);
         }
     }
-})(viewRouter, __dirname);
+})(serviceRouter, __dirname);
 
-module.exports = viewRouter;
+module.exports = serviceRouter;

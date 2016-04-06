@@ -15,11 +15,10 @@ form {
   margin: 0 auto;	
 }
 
-textarea {
+input {
   border-style: none;
   width: 700px;
   margin-left: 20px;
-  height: 100px;
   font: 30px helvetica;
   font-weight: 100;
 }
