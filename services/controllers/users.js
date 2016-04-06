@@ -1,5 +1,4 @@
 'use strict';
-const views = require('co-views');
 const parse = require('co-body');
 const users = [
     {
@@ -12,22 +11,14 @@ const users = [
     }
 ];
 
-const render = views(__dirname + '/../views', {
-    map: {html: 'swig'}
-});
-
-module.exports.home = function *home() {
-    this.body = yield render('list', {'users': users});
-};
-
 module.exports.list = function *list() {
     this.body = yield users;
 };
 
-module.exports.fetch = function *fetch(id) {
-    const user = users[id];
+module.exports.fetch = function *fetch() {
+    const user = users[this.params.id];
     if (!user) {
-        this.throw(404, 'User with id = ' + id + ' was not found');
+        this.throw(404, 'User with id = ' + this.params.id + ' was not found')
     }
     this.body = yield user;
 };
