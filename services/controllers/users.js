@@ -7,7 +7,6 @@ User.findOne({name: 'test'}, function (err, testUser) {
     if (!testUser) {
         console.log('test user did not exist; creating test user...');
         testUser = new User({
-            id: 1,
             name: 'test'
         });
         testUser.save();
@@ -19,11 +18,11 @@ module.exports.list = function *list() {
 };
 
 module.exports.fetch = function *fetch() {
-    const user = users[this.params.id];
+    const user = yield User.findByUserId(this.params.id);
     if (!user) {
         this.throw(404, 'User with id = ' + this.params.id + ' was not found')
     }
-    this.body = yield user;
+    this.body = user;
 };
 
 module.exports.create = function *create() {
