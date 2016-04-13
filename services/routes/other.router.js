@@ -4,14 +4,14 @@
 'use strict';
 
 const Router = require('koa-router');
-const others = require('../controllers/others');
+const otherController = require('../controllers/other.controller');
 
 const othersRouter = new Router({
     prefix: '/others'
 });
 
 othersRouter
-    .get('/async', others.delay)
-    .get('/promise', others.promise);
+    .get('/async', otherController.delay)
+    .get('/promise', otherController.promise);
 
 module.exports = othersRouter;
