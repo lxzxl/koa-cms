@@ -1,3 +1,3 @@
-# koa-demo
+# koa-cms
 
-A demo site of koa framework.
+A cms site of koa framework.
