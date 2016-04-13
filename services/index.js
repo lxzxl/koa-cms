@@ -4,5 +4,6 @@
 'use strict';
 
 const router = require('./routes');
+const passport = require('./middlewares/passport');
 
-module.exports = {router};
+module.exports = {router, passport};

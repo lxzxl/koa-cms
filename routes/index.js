@@ -9,12 +9,12 @@ const viewRouter = new Router();
 (function retrieveRoutes(baseRouter, dir) {
     for (let filename of fs.readdirSync(dir)) {
         let filePath = `${dir}/${filename}`;
-        if (fs.statSync(filePath).isFile()) {
-            if (/^index.js$/.test(filename)) continue;
+        let fileInfo = fs.statSync(filePath);
+        if (fileInfo.isFile() && /\.router\.js$/.test(filename)) {
             let router = require(filePath);
             baseRouter.use(router.routes());
             console.log('Router Loaded: ' + filename);
-        } else {// directory.
+        } else if (fileInfo.isDirectory()) {// directory.
             retrieveRoutes(baseRouter, filePath);
         }
     }
