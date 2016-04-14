@@ -8,6 +8,8 @@ const render = views(__dirname + '/../views', {
     map: {html: 'swig'}
 });
 
-module.exports.login = function *login() {
-    this.body = yield render('login', {'title': 'login page'});
+module.exports.index = function *login() {
+    this.body = yield render('home', {
+        content: 'home page'
+    });
 };

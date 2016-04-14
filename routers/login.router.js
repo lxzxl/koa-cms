@@ -12,8 +12,8 @@ const loginRouter = new Router({'prefix': '/login'});
 loginRouter
     .get('/', userController.login)
     .post('/', passport.authenticate('local', {
-        successRedirect: '/service/others/async',
-        failureRedirect: '/service/others/promise'
+        successRedirect: '/',
+        failureRedirect: '/login'
     }))
 ;
 
