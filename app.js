@@ -10,7 +10,6 @@ const bodyParser = require('koa-bodyparser');
 const session = require('koa-session');
 const mount = require('koa-mount');
 const mongoose = require('mongoose');
-require('mongoose-auto-increment').initialize(mongoose);
 
 const passport = require('./middlewares/passport');
 const serviceApp = require('./services');
