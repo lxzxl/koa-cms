@@ -1,6 +1,5 @@
 'use strict';
 const mongoose = require('mongoose');
-const autoIncrement = require('mongoose-auto-increment');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
