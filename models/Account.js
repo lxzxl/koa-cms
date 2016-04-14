@@ -39,6 +39,6 @@ exports = module.exports = function (app, mongoose) {
     accountSchema.index({user: 1});
     accountSchema.index({'status.id': 1});
     accountSchema.index({search: 1});
-    accountSchema.set('autoIndex', (app.get('env') === 'development'));
+    accountSchema.set('autoIndex', (app.env === 'development'));
     app.db.model('Account', accountSchema);
 };
