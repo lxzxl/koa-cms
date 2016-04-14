@@ -1,6 +1,6 @@
 'use strict';
 const passport = require('koa-passport');
-const User = require('../models/User');
+const User = require('../services/models/User');
 
 User.findOne({username: 'test'}, function (err, testUser) {
     if (!testUser) {
@@ -61,3 +61,5 @@ passport.use(new LocalStrategy(function (username, password, done) {
 //     User.findOne({ google_id: profile.id }, done);
 //   }
 // ))
+
+module.exports = passport;

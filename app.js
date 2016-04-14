@@ -7,13 +7,14 @@ const logger = require('koa-logger');
 const serve = require('koa-static');
 const koa = require('koa');
 const bodyParser = require('koa-bodyparser');
-const passport = require('koa-passport');
+const session = require('koa-session');
 const mount = require('koa-mount');
 const mongoose = require('mongoose');
 require('mongoose-auto-increment').initialize(mongoose);
 
-const service = require('./services');
-const viewRouter = require('./routes');
+const passport = require('./middlewares/passport');
+const serviceApp = require('./services');
+const viewRouter = require('./routers');
 
 const app = module.exports = koa();
 
@@ -38,13 +39,17 @@ app.use(compress());
 // bodyParser
 app.use(bodyParser());
 
+// session
+app.keys = ['my-secret'];
+app.use(session(app));
+
 // authentication
 app.use(passport.initialize());
 app.use(passport.session());
 
 // load routes
-// app.use(mount(viewRouter.middleware()));
-app.use(mount('/service', service.router.middleware()));
+app.use(mount(viewRouter.middleware()));
+serviceApp.mountApp(app, '/service', {authRequired: true});
 
 if (!module.parent) {
     app.listen(3000);

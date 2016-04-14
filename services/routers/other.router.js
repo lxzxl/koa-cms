@@ -10,8 +10,10 @@ const othersRouter = new Router({
     prefix: '/others'
 });
 
+// Require authentication for now
 othersRouter
     .get('/async', otherController.delay)
-    .get('/promise', otherController.promise);
+    .get('/promise', otherController.promise)
+;
 
 module.exports = othersRouter;
