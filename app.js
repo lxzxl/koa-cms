@@ -20,7 +20,7 @@ const app = module.exports = koa();
 /**
  * Connect to database.
  */
-mongoose.connect('mongodb://localhost/koa-demo');
+mongoose.connect('mongodb://localhost/koa-cms');
 mongoose.connection.on("error", function (err) {
     process.stderr.write(`${err.name}: ${err.message}`);
     process.exit(1);
