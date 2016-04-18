@@ -8,9 +8,24 @@ const LocalStrategy = require('passport-local').Strategy;
 // const TumblrStrategy = require('passport-tumblr').Strategy;
 
 module.exports = function (app, passport) {
+
+    app.db.models.User.findOne({username: 'test'}, function (err, testUser) {
+        if (!testUser) {
+            console.log('test user did not exist; creating test user...');
+            this.model.encryptPassword('test', function (err, hash) {
+                testUser = new app.db.models.User({
+                    username: 'test',
+                    password: hash,
+                    isActive: true
+                });
+                testUser.save();
+            });
+        }
+    });
+
     passport.use(new LocalStrategy(
         function (username, password, done) {
-            var conditions = {isActive: 'yes'};
+            var conditions = {isActive: true};
             if (username.indexOf('@') === -1) {
                 conditions.username = username;
             }

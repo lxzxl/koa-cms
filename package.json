@@ -8,6 +8,7 @@
     "test": "mocha"
   },
   "dependencies": {
+    "bcrypt": "^0.8.5",
     "co-views": "^2.1.0",
     "koa": "^1.2.0",
     "koa-bodyparser": "^2.0.1",
