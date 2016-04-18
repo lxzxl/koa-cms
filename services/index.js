@@ -5,18 +5,13 @@
 
 const mount = require('koa-mount');
 
+const permission = require('../middlewares/permission');
 const router = require('./routers');
 
 const mountApp = function (app, prefix, options) {
     options = options || {};
     if (options.authRequired) {
-        this.router.use(function*(next) {
-            if (this.isAuthenticated()) {
-                yield next;
-            } else {
-                this.status = 401;
-            }
-        });
+        this.router.use(permission.ensureAuthenticated);
     }
     app.use(mount(prefix, this.router.middleware()));
 };

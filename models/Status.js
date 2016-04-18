@@ -9,6 +9,6 @@ exports = module.exports = function (app, mongoose) {
     statusSchema.plugin(require('./plugins/pagedFind'));
     statusSchema.index({pivot: 1});
     statusSchema.index({name: 1});
-    statusSchema.set('autoIndex', (app.get('env') === 'development'));
+    statusSchema.set('autoIndex', (app.env === 'development'));
     app.db.model('Status', statusSchema);
 };

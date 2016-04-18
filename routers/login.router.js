@@ -7,9 +7,9 @@ const Router = require('koa-router');
 const passport = require('koa-passport');
 
 const userController = require('../controllers/user.controller');
-const loginRouter = new Router({'prefix': '/login'});
+const _router = new Router({'prefix': '/login'});
 
-loginRouter
+_router
     .get('/', userController.login)
     .post('/', passport.authenticate('local', {
         successRedirect: '/',
@@ -17,4 +17,4 @@ loginRouter
     }))
 ;
 
-module.exports = loginRouter;
+module.exports = _router;

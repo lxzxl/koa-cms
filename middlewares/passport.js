@@ -1,65 +1,137 @@
 'use strict';
-const passport = require('koa-passport');
-const User = require('../services/models/User');
-
-User.findOne({username: 'test'}, function (err, testUser) {
-    if (!testUser) {
-        console.log('test user did not exist; creating test user...');
-        testUser = new User({
-            username: 'test',
-            password: 'test'
-        });
-        testUser.save();
-    }
-});
-
-passport.serializeUser(function (user, done) {
-    done(null, user._id);
-});
-
-passport.deserializeUser(function (id, done) {
-    User.findById(id, done);
-});
 
 const LocalStrategy = require('passport-local').Strategy;
-passport.use(new LocalStrategy(function (username, password, done) {
-    User.findOne({username: username, password: password}, done);
-}));
+// const TwitterStrategy = require('passport-twitter').Strategy;
+// const GitHubStrategy = require('passport-github').Strategy;
+// const FacebookStrategy = require('passport-facebook').Strategy;
+// const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+// const TumblrStrategy = require('passport-tumblr').Strategy;
 
-// const FacebookStrategy = require('passport-facebook').Strategy
-// passport.use(new FacebookStrategy({
-//     clientID: 'your-client-id',
-//     clientSecret: 'your-secret',
-//     callbackURL: 'http://localhost:' + (process.env.PORT || 3000) + '/auth/facebook/callback'
-//   },
-//   function(token, tokenSecret, profile, done) {
-//     // retrieve user
-//     User.findOne({ facebook_id: profile.id }, done);
-//   }
-// ))
+module.exports = function (app, passport) {
+    passport.use(new LocalStrategy(
+        function (username, password, done) {
+            var conditions = {isActive: 'yes'};
+            if (username.indexOf('@') === -1) {
+                conditions.username = username;
+            }
+            else {
+                conditions.email = username.toLowerCase();
+            }
 
-// const TwitterStrategy = require('passport-twitter').Strategy
-// passport.use(new TwitterStrategy({
-//     consumerKey: 'your-consumer-key',
-//     consumerSecret: 'your-secret',
-//     callbackURL: 'http://localhost:' + (process.env.PORT || 3000) + '/auth/twitter/callback'
-//   },
-//   function(token, tokenSecret, profile, done) {
-//     // retrieve user
-//     User.findOne({ twitter_id: profile.id }, done);
-//   }
-// ))
+            app.db.models.User.findOne(conditions, function (err, user) {
+                if (err) {
+                    return done(err);
+                }
 
-// const GoogleStrategy = require('passport-google-auth').Strategy
-// passport.use(new GoogleStrategy({
-//     clientId: 'your-client-id',
-//     clientSecret: 'your-secret',
-//     callbackURL: 'http://localhost:' + (process.env.PORT || 3000) + '/auth/google/callback'
-//   },
-//   function(token, tokenSecret, profile, done) {
-//     // retrieve user
-//     User.findOne({ google_id: profile.id }, done);
-//   }
-// ))
+                if (!user) {
+                    return done(null, false, {message: 'Unknown user'});
+                }
 
-module.exports = passport;
+                app.db.models.User.validatePassword(password, user.password, function (err, isValid) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    if (!isValid) {
+                        return done(null, false, {message: 'Invalid password'});
+                    }
+
+                    return done(null, user);
+                });
+            });
+        }
+    ));
+
+    // if (app.config.oauth.twitter.key) {
+    //     passport.use(new TwitterStrategy({
+    //             consumerKey: app.config.oauth.twitter.key,
+    //             consumerSecret: app.config.oauth.twitter.secret
+    //         },
+    //         function (token, tokenSecret, profile, done) {
+    //             done(null, false, {
+    //                 token: token,
+    //                 tokenSecret: tokenSecret,
+    //                 profile: profile
+    //             });
+    //         }
+    //     ));
+    // }
+    //
+    // if (app.config.oauth.github.key) {
+    //     passport.use(new GitHubStrategy({
+    //             clientID: app.config.oauth.github.key,
+    //             clientSecret: app.config.oauth.github.secret,
+    //             customHeaders: {"User-Agent": app.config.projectName}
+    //         },
+    //         function (accessToken, refreshToken, profile, done) {
+    //             done(null, false, {
+    //                 accessToken: accessToken,
+    //                 refreshToken: refreshToken,
+    //                 profile: profile
+    //             });
+    //         }
+    //     ));
+    // }
+    //
+    // if (app.config.oauth.facebook.key) {
+    //     passport.use(new FacebookStrategy({
+    //             clientID: app.config.oauth.facebook.key,
+    //             clientSecret: app.config.oauth.facebook.secret
+    //         },
+    //         function (accessToken, refreshToken, profile, done) {
+    //             done(null, false, {
+    //                 accessToken: accessToken,
+    //                 refreshToken: refreshToken,
+    //                 profile: profile
+    //             });
+    //         }
+    //     ));
+    // }
+    //
+    // if (app.config.oauth.google.key) {
+    //     passport.use(new GoogleStrategy({
+    //             clientID: app.config.oauth.google.key,
+    //             clientSecret: app.config.oauth.google.secret
+    //         },
+    //         function (accessToken, refreshToken, profile, done) {
+    //             done(null, false, {
+    //                 accessToken: accessToken,
+    //                 refreshToken: refreshToken,
+    //                 profile: profile
+    //             });
+    //         }
+    //     ));
+    // }
+    //
+    // if (app.config.oauth.tumblr.key) {
+    //     passport.use(new TumblrStrategy({
+    //             consumerKey: app.config.oauth.tumblr.key,
+    //             consumerSecret: app.config.oauth.tumblr.secret
+    //         },
+    //         function (token, tokenSecret, profile, done) {
+    //             done(null, false, {
+    //                 token: token,
+    //                 tokenSecret: tokenSecret,
+    //                 profile: profile
+    //             });
+    //         }
+    //     ));
+    // }
+
+    passport.serializeUser(function (user, done) {
+        done(null, user._id);
+    });
+
+    passport.deserializeUser(function (id, done) {
+        app.db.models.User.findOne({_id: id}).populate('roles.admin').populate('roles.account').exec(function (err, user) {
+            if (user && user.roles && user.roles.admin) {
+                user.roles.admin.populate("groups", function (err, admin) {
+                    done(err, user);
+                });
+            }
+            else {
+                done(err, user);
+            }
+        });
+    });
+};

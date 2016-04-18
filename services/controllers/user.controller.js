@@ -1,5 +1,4 @@
 'use strict';
-const User = require('../models/User');
 
 module.exports.login = function *list() {
     this.body = yield User.find();

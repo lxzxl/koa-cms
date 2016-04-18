@@ -4,11 +4,11 @@
 'use strict';
 
 const Router = require('koa-router');
-const homeController = require('../controllers/home.controller.js');
+const homeController = require('../controllers/home.controller');
 
-const homeRouter = new Router();
+const _router = new Router();
 
-homeRouter
+_router
     .get('/', homeController.index);
 
-module.exports = homeRouter;
+module.exports = _router;
