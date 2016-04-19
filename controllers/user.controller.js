@@ -24,10 +24,12 @@ module.exports.login = function *login(next) {
             };
         } else {
             yield ctx.login(user);
-            ctx.body = {
-                success: true,
-                authToken: user.authToken
-            };
+            ctx.redirect('/admin');
         }
     }).call(this, next);
+};
+
+module.exports.logout = function *logout() {
+    this.logout();
+    this.redirect('/');
 };

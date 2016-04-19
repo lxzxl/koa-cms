@@ -1,12 +1,12 @@
 'use strict';
 
 const asyncOperation = () => callback =>
-    setTimeout(() => callback(null, {status: 'success'}), 2000);
+    setTimeout(() => callback(null, {status: 'async success'}), 2000);
 
 
 const returnsPromise = () =>
     new Promise((resolve, reject) =>
-        setTimeout(() => resolve({status: 'fail'}), 2000));
+        setTimeout(() => resolve({status: 'promise success'}), 2000));
 
 module.exports.delay = function *delay() {
     let result = yield asyncOperation();

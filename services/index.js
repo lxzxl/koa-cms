@@ -11,7 +11,7 @@ const router = require('./routers');
 const mountApp = function (app, prefix, options) {
     options = options || {};
     if (options.authRequired) {
-        this.router.use(permission.ensureAuthenticated);
+        app.use(mount(prefix, permission.ensureAuthenticated));
     }
     app.use(mount(prefix, this.router.middleware()));
 };

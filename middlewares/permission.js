@@ -4,21 +4,23 @@
 'use strict';
 
 module.exports.ensureAuthenticated = function *(next) {
-    if (this.req.isAuthenticated()) {
+    if (this.isAuthenticated()) {
         yield next;
+    } else {
+        this.set('X-Auth-Required', 'true');
+        //FIXME: session
+        this.session.returnUrl = this.originalUrl;
+        this.redirect('/');
     }
-    this.set('X-Auth-Required', 'true');
-    //FIXME: session
-    this.req.session.returnUrl = this.originalUrl;
-    this.redirect('/login/');
 };
 
 module.exports.ensureAdmin = function *(next) {
     if (this.req.user.canPlayRoleOf('admin')) {
         yield next;
+    } else {
+        this.status = 401;
     }
-    this.status = 401;
-}
+};
 
 module.exports.ensureAccount = function *(next) {
     if (this.req.user.canPlayRoleOf('account')) {
@@ -28,6 +30,7 @@ module.exports.ensureAccount = function *(next) {
             }
         }
         yield next;
+    } else {
+        this.status = 401;
     }
-    this.status = 401;
 };
