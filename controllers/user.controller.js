@@ -10,7 +10,15 @@ const render = views(__dirname + '/../views', {
 });
 
 module.exports.init = function *init() {
-    this.body = yield render('login', {'title': 'login page'});
+    this.body = yield render('login');
+};
+
+module.exports.signUp = function *singUp(next) {
+    this.body = yield render('signUp');
+};
+
+module.exports.doSignUp = function *singUp(next) {
+    yield next;
 };
 
 module.exports.login = function *login(next) {

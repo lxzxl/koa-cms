@@ -9,6 +9,8 @@ const userController = require('../controllers/user.controller');
 const _router = new Router();
 
 _router
+    .get('/signup',userController.signUp)
+    .post('/signup',userController.doSignUp)
     .get('/login', userController.init)
     .post('/login', userController.login)
     .get('/logout', userController.logout)

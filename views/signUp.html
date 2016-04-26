@@ -3,20 +3,25 @@
 
 {% block content %}
 {{ content }}
-<form action="/login" method="post">
+<form action="/signup" method="post">
     <!--<input type="hidden" name="_csrf" value="{csrfToken}"/>-->
     <p>
         <label>Username:
-            <input type="text" name="username" value="test"/>
+            <input type="text" name="username"/>
+        </label>
+    </p>
+    <p>
+        <label>Username:
+            <input type="text" name="email"/>
         </label>
     </p>
     <p>
         <label>Password:
-            <input type="password" name="password" value="test"/>
+            <input type="password" name="password"/>
         </label>
     </p>
     <p>
-        <button type="submit">Log In</button>
+        <button type="submit">Create Account</button>
     </p>
 </form>
 {% endblock %}
