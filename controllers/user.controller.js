@@ -18,7 +18,10 @@ module.exports.signUp = function *singUp(next) {
 };
 
 module.exports.doSignUp = function *singUp(next) {
-    yield next;
+    // check duplicate of username.
+    let user = yield this.app.db.models.User.findOne({username: this.request.body.username});
+    // check duplicate of email.
+    let user = yield this.app.db.models.User.findOne({email: req.body.email.toLowerCase()});
 };
 
 module.exports.login = function *login(next) {
