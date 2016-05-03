@@ -43,17 +43,21 @@ exports = module.exports = function (app, mongoose) {
 
         return returnUrl;
     };
-    userSchema.statics.encryptPassword = function (password, done) {
+    userSchema.statics.encryptPassword = function (password) {
         var bcrypt = require('bcrypt');
-        bcrypt.genSalt(10, function (err, salt) {
-            if (err) {
-                return done(err);
-            }
-
-            bcrypt.hash(password, salt, function (err, hash) {
-                done(err, hash);
+        return new Promise(function (resolve, reject) {
+            bcrypt.genSalt(10, function (err, salt) {
+                if (err) {
+                    return reject(err);
+                }
+                bcrypt.hash(password, salt, function (err, hash) {
+                    if (err) {
+                        return reject(err);
+                    }
+                    return resolve(hash);
+                });
             });
-        });
+        })
     };
     userSchema.statics.validatePassword = function (password, hash, done) {
         var bcrypt = require('bcrypt');
