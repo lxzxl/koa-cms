@@ -59,6 +59,16 @@ app.use(bodyParser());
 app.keys = ['my-secret'];
 app.use(session(app));
 
+// error
+app.use(function *errorHandler(next) {
+    try {
+        yield next;
+    } catch (err) {
+        this.status = err.status || 500;
+        this.body = err.message;
+    }
+});
+
 // authentication
 app.use(passport.initialize());
 app.use(passport.session());
