@@ -18,8 +18,7 @@ use koa-cms; // or your MongoDB's db name if different
 db.admingroups.insert({ _id: 'root', name: 'Root' });
 db.admins.insert({ name: {first: 'Root', last: 'Admin', full: 'Root Admin'}, groups: ['root'] });
 var rootAdmin = db.admins.findOne();
-db.users.save({ username: 'root', isActive: true, email: 'your@email.addy', password: '$2a$10$mK2IhtqOCifD5/YH2GQPl.odhjcy4ENXNBkqanC0fMAxfPj1bWy2u', roles:
-{admin: rootAdmin._id} });
+db.users.save({ username: 'root', isActive: true, email: 'your@email.addy', password: '$2a$10$mK2IhtqOCifD5/YH2GQPl.odhjcy4ENXNBkqanC0fMAxfPj1bWy2u', roles:{admin: rootAdmin._id} });
 var rootUser = db.users.findOne();
 rootAdmin.user = { id: rootUser._id, name: rootUser.username };
 db.admins.save(rootAdmin);
