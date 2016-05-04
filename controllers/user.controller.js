@@ -17,7 +17,7 @@ module.exports.signUp = function *singUp(next) {
     this.body = yield render('signUp');
 };
 
-module.exports.doSignUp = function *singUp() {
+module.exports.doSignUp = function *doSingUp() {
     const User = this.app.db.models.User;
     let _username = this.request.body.username;
     let _email = this.request.body.email.toLowerCase();
@@ -74,7 +74,7 @@ module.exports.login = function *login(next) {
             };
         } else {
             yield ctx.login(user);
-            ctx.redirect('/admin');
+            ctx.redirect(user.getDefaultReturnUrl());
         }
     }).call(this, next);
 };

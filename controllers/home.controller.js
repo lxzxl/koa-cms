@@ -10,6 +10,8 @@ const render = views(__dirname + '/../views', {
 
 module.exports.index = function *login() {
     this.body = yield render('home', {
-        content: 'home page'
+        content: 'home page',
+        user: this.req.user,
+        isAuthenticated: this.isAuthenticated()
     });
 };
