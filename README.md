@@ -2,15 +2,16 @@
 
 A cms site of koa framework.
 
+Firstly, install mongodb and run `npm install` and `npm start` to start the site.
 
 Next, you need a few records in the database to start using the user system.
 
-Run these commands on mongo via the terminal. __Obviously you should use your
-email address.__
+Run these commands on mongo via the terminal.
+**Obviously you should use your own email address.**
 
-__default password: asdf__
+default password: **asdf**
 ```js
-use koa-cms; // or your mongo db name if different
+use koa-cms; // or your MongoDB's db name if different
 ```
 
 ```js
