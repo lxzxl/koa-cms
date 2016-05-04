@@ -1,0 +1,16 @@
+{% extends 'layouts/default.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    {% if user %}
+        <h1>Hello {{ user.username }}</h1>
+    {% endif %}
+    {{ content }}
+    <br><a href="/signup">Sing Up</a>
+    <br>
+    {% if isAuthenticated %}
+        <a href="/logout">Sign Out</a>
+    {% else %}
+        <a href="/login">Sign In</a>
+    {% endif %}
+{% endblock %}

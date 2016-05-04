@@ -8,6 +8,6 @@ exports = module.exports = function (app, mongoose) {
     });
     attemptSchema.index({ip: 1});
     attemptSchema.index({user: 1});
-    attemptSchema.set('autoIndex', (app.get('env') === 'development'));
+    attemptSchema.set('autoIndex', (app.env === 'development'));
     app.db.model('LoginAttempt', attemptSchema);
 };

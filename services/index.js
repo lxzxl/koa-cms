@@ -3,7 +3,17 @@
  */
 'use strict';
 
-const router = require('./routes');
-const passport = require('./middlewares/passport');
+const mount = require('koa-mount');
 
-module.exports = {router, passport};
+const permission = require('../middlewares/permission');
+const router = require('./routers');
+
+const mountApp = function (app, prefix, options) {
+    options = options || {};
+    if (options.authRequired) {
+        app.use(mount(prefix, permission.ensureAuthenticated));
+    }
+    app.use(mount(prefix, this.router.middleware()));
+};
+
+module.exports = {router, mountApp};

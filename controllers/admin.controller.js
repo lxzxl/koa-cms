@@ -1,12 +1,10 @@
 'use strict';
 const views = require('co-views');
-const User = require('../services/models/users');
 
 const render = views(__dirname + '/../views', {
     map: {html: 'swig'}
 });
 
 module.exports.home = function *home() {
-    let users = yield User.find().exec();
-    this.body = yield render('list', {'users': users});
+    this.body = yield render('admin', {content: 'admin page'});
 };

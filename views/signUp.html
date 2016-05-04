@@ -1,0 +1,27 @@
+{% extends 'layouts/default.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+{{ content }}
+<form action="/signup" method="post">
+    <!--<input type="hidden" name="_csrf" value="{csrfToken}"/>-->
+    <p>
+        <label>Username:
+            <input type="text" name="username"/>
+        </label>
+    </p>
+    <p>
+        <label>Email:
+            <input type="text" name="email"/>
+        </label>
+    </p>
+    <p>
+        <label>Password:
+            <input type="password" name="password"/>
+        </label>
+    </p>
+    <p>
+        <button type="submit">Create Account</button>
+    </p>
+</form>
+{% endblock %}
