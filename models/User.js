@@ -1,5 +1,7 @@
 'use strict';
 
+const bcrypt = require('bcrypt');
+
 exports = module.exports = function (app, mongoose) {
     var userSchema = new mongoose.Schema({
         username: {type: String, unique: true},
@@ -44,7 +46,6 @@ exports = module.exports = function (app, mongoose) {
         return returnUrl;
     };
     userSchema.statics.encryptPassword = function (password) {
-        var bcrypt = require('bcrypt');
         return new Promise(function (resolve, reject) {
             bcrypt.genSalt(10, function (err, salt) {
                 if (err) {
@@ -57,12 +58,14 @@ exports = module.exports = function (app, mongoose) {
                     return resolve(hash);
                 });
             });
-        })
+        });
     };
-    userSchema.statics.validatePassword = function (password, hash, done) {
-        var bcrypt = require('bcrypt');
-        bcrypt.compare(password, hash, function (err, res) {
-            done(err, res);
+    userSchema.statics.validatePassword = function (password, hash) {
+        return new Promise(function (resolve, reject) {
+            bcrypt.compare(password, hash, function (err, res) {
+                if (err) return reject(err);
+                return resolve(res);
+            });
         });
     };
     userSchema.plugin(require('./plugins/pagedFind'));

@@ -8,21 +8,7 @@ const LocalStrategy = require('passport-local').Strategy;
 // const TumblrStrategy = require('passport-tumblr').Strategy;
 
 module.exports = function (app, passport) {
-
-    app.db.models.User.findOne({username: 'test'}, function (err, testUser) {
-        if (!testUser) {
-            console.log('test user did not exist; creating test user...');
-            this.model.encryptPassword('test', function (err, hash) {
-                testUser = new app.db.models.User({
-                    username: 'test',
-                    password: hash,
-                    isActive: true
-                });
-                testUser.save();
-            });
-        }
-    });
-
+    const User = app.db.models.User;
     passport.use(new LocalStrategy(
         function (username, password, done) {
             var conditions = {isActive: true};
@@ -32,28 +18,24 @@ module.exports = function (app, passport) {
             else {
                 conditions.email = username.toLowerCase();
             }
-
-            app.db.models.User.findOne(conditions, function (err, user) {
-                if (err) {
-                    return done(err);
-                }
-
-                if (!user) {
-                    return done(null, false, {message: 'Unknown user'});
-                }
-
-                app.db.models.User.validatePassword(password, user.password, function (err, isValid) {
-                    if (err) {
-                        return done(err);
+            let _user;
+            User.findOne(conditions)
+                .then(function (user) {
+                        if (!user) {
+                            return done(null, false, {message: 'Unknown user'});
+                        }
+                        _user = user;
+                        return User.validatePassword(password, _user.password);
                     }
-
+                )
+                .then(function (isValid) {
                     if (!isValid) {
                         return done(null, false, {message: 'Invalid password'});
                     }
-
-                    return done(null, user);
+                    return done(null, _user);
+                }, function (err) {
+                    return done(err);
                 });
-            });
         }
     ));
 
@@ -138,7 +120,7 @@ module.exports = function (app, passport) {
     });
 
     passport.deserializeUser(function (id, done) {
-        app.db.models.User.findOne({_id: id}).populate('roles.admin').populate('roles.account').exec(function (err, user) {
+        User.findOne({_id: id}).populate('roles.admin').populate('roles.account').exec(function (err, user) {
             if (user && user.roles && user.roles.admin) {
                 user.roles.admin.populate("groups", function (err, admin) {
                     done(err, user);
