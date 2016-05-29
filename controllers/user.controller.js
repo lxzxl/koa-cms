@@ -5,6 +5,8 @@
 const views = require('co-views');
 const passport = require('koa-passport');
 
+const utils = require('../libs/utils');
+
 const render = views(__dirname + '/../views', {
     map: {html: 'swig'}
 });
@@ -20,7 +22,12 @@ module.exports.signUp = function *singUp(next) {
 module.exports.doSignUp = function *doSingUp() {
     const User = this.app.db.models.User;
     let _username = this.request.body.username;
+    if (!_username) this.throw(400, 'User name is required!');
     let _email = this.request.body.email.toLowerCase();
+    if (!_email) this.throw(400, 'Email is required!');
+    if (!utils.isValidEmail(_email)) this.throw(400, 'Invalid Email!');
+    let _password = this.request.body.password;
+    if (!_password) this.throw(400, 'Password is required!');
     // check duplicate of username.
     let user = yield User.findOne({username: _username});
     if (user) {
@@ -32,7 +39,7 @@ module.exports.doSignUp = function *doSingUp() {
         this.throw(400, 'Duplicate email');
     }
     // create User
-    let hash = yield User.encryptPassword(this.request.body.password);
+    let hash = yield User.encryptPassword(_password);
     let userData = {
         isActive: 'yes',
         username: _username,
